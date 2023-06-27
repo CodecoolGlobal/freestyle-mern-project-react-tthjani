@@ -23,7 +23,8 @@ function App() {
 
   const [regForm, setRegForm] = useState(usersData);
   const [accForm, setAccForm] = useState(userAccData);
-  // console.log(form);
+
+  //console.log(form);
 
   const logInputFields = [
     {
@@ -82,25 +83,28 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const keys = Object.keys(regForm);
-    let keysHaveValue = false;
+    let keysHaveValue = true;
+    console.log(keys);
 
     keys.forEach((key) => {
-      if (regForm[key]) {
-        const newRegForm = {
-          name: regForm.firstName + " " + regForm.lastName,
-          username: regForm.username,
-          email: regForm.email,
-          phone: regForm.phone,
-          password: regForm.password,
-        };
-        console.log(regForm[key]);
-        keysHaveValue = true;
-        setSubmitted(true);
+      if (!regForm[key]) {
+        keysHaveValue = false;
       }
     });
-    if (keysHaveValue === false) {
-      alert("The from MUST be completed!");
+    if (keysHaveValue) {
+      const newRegForm = {
+        name: regForm.firstName + " " + regForm.lastName,
+        username: regForm.username,
+        email: regForm.email,
+        phone: regForm.phone,
+        password: regForm.password,
+      };
+      console.log(newRegForm);
+      setSubmitted(true);
+    } else {
+      console.log("Not working");
     }
   };
 
