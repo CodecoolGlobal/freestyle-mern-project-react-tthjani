@@ -4,6 +4,7 @@ import RegistInputField from "./components/RegistInputField";
 import LoginField from "./components/Login";
 import { useState } from "react";
 
+
 function App() {
   const [submitted, setSubmitted] = useState(false);
 
@@ -86,13 +87,13 @@ function App() {
 
     const keys = Object.keys(regForm);
     let keysHaveValue = true;
-    console.log(keys);
 
     keys.forEach((key) => {
       if (!regForm[key]) {
         keysHaveValue = false;
       }
     });
+
     if (keysHaveValue) {
       const newRegForm = {
         name: regForm.firstName + " " + regForm.lastName,
@@ -101,12 +102,33 @@ function App() {
         phone: regForm.phone,
         password: regForm.password,
       };
+      
       console.log(newRegForm);
       setSubmitted(true);
+
+       const data = { 
+        officialName: newRegForm.name,
+        username:newRegForm.username,
+        email: newRegForm.email,
+        phone: newRegForm.phone,
+        password: newRegForm.password,};
+      
+        fetch('http://localhost:3000/api/registration', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        })
+          .then(response => response.json())
+          .then(response => setRegForm(response))
+          .catch(error => console.log(error)) 
+
+        console.log("Registration complete!")
     } else {
       console.log("Not working");
     }
   };
+    
+  ;
 
   const loginSubmit = (event) => {
     event.preventDefault();
@@ -116,34 +138,27 @@ function App() {
       password: accForm.password,
     };
 
-    
+   
+    fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(newAccForm)
+      })
+      .then(response => response.json())
+      .then(response => {;         
+        console.log(response.success);       // ehhez kell majd egy useState amit belehet rakni ternarybe, hogy tovább engedjen vagy hibaüzenet
+      
+        console.log("Login complete!");
+      })
+      .catch(error => console.log(error));
+
     setSubmitted(true);
     console.log(newAccForm);
     console.log("Login complete!");
   };
 
   
-    const data = { 
-      officialName: newForm.name,
-      username:newForm.username,
-      email: newForm.email,
-      phone: newForm.phone,
-      password: newForm.password,};
-
-    fetch('http://localhost:3000/api/users', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(response => setForm(response))
-      .catch(error => console.log(error))
-  
-
-    console.log(newForm);
-    console.log("Registration complete!");
-
-  };
+    
 
 
 
@@ -157,7 +172,7 @@ function App() {
         [id]: value,
       };
     });
-
+  }
   const handleAccChange = function (event) {
     const id = event.target.id;
     const value = event.target.value;
@@ -170,20 +185,7 @@ function App() {
     });
   };
 
- /*  function handleRegistration(event){
-    event.preventDefault();
 
-    const data = { officialName, username, email, phone, password};
-    fetch('http://localhost:3000/api/users', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    })
-      .then(response => response.json())
-      .then(response => setForm(response))
-      .catch(error => {console.log(error);
-      })
-  } */
 
   return !submitted ? (
     <div className="App">
