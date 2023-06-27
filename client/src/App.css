@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.logCard {
+  position: relative;
+  left: -430px;
+  top: -150px;
+}
