@@ -116,20 +116,29 @@ function App() {
       password: accForm.password,
     };
 
-    console.log(newAccForm);
-    console.log("Login complete!");
-  };
 
-  const handleRegChange = function (event) {
-    const id = event.target.id;
-    const value = event.target.value;
+    setSubmitted(true);
 
-    setRegForm((prevForm) => {
-      return {
-        ...prevForm,
-        [id]: value,
-      };
-    });
+    const data = { 
+      officialName: newForm.name,
+      username:newForm.username,
+      email: newForm.email,
+      phone: newForm.phone,
+      password: newForm.password,};
+
+    fetch('http://localhost:3000/api/users', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(response => setForm(response))
+      .catch(error => console.log(error))
+  
+
+    console.log(newForm);
+    console.log("Registration complete!");
+
   };
 
   const handleAccChange = function (event) {
@@ -143,6 +152,21 @@ function App() {
       };
     });
   };
+
+ /*  function handleRegistration(event){
+    event.preventDefault();
+
+    const data = { officialName, username, email, phone, password};
+    fetch('http://localhost:3000/api/users', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(response => setForm(response))
+      .catch(error => {console.log(error);
+      })
+  } */
 
   return !submitted ? (
     <div className="App">
@@ -159,7 +183,7 @@ function App() {
           />
         ))}
 
-        <button type="submit">Register</button>
+        <button type="submit" /* onClick={handleRegistration} */>Register</button>
       </form>
       <form onSubmit={loginSubmit} className="logCard">
         {logInputFields.map((inputField, index) => (
