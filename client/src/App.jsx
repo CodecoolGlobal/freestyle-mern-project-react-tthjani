@@ -116,9 +116,13 @@ function App() {
       password: accForm.password,
     };
 
-
+    
     setSubmitted(true);
+    console.log(newAccForm);
+    console.log("Login complete!");
+  };
 
+  
     const data = { 
       officialName: newForm.name,
       username:newForm.username,
@@ -140,6 +144,19 @@ function App() {
     console.log("Registration complete!");
 
   };
+
+
+
+  const handleRegChange = function (event) {
+    const id = event.target.id;
+    const value = event.target.value;
+
+    setRegForm((prevForm) => {
+      return {
+        ...prevForm,
+        [id]: value,
+      };
+    });
 
   const handleAccChange = function (event) {
     const id = event.target.id;
