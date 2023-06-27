@@ -1,6 +1,7 @@
 import "./App.css";
 import Header from "./components/Header";
-import InputField from "./components/InputField";
+import RegistInputField from "./components/RegistInputField";
+import LoginField from "./components/Login";
 import { useState } from "react";
 
 function App() {
@@ -18,7 +19,22 @@ function App() {
   const [form, setForm] = useState(usersData);
   // console.log(form);
 
-  const inputFields = [
+  const logInputFields = [
+    {
+      className: "username",
+      id: "username",
+      type: "text",
+      label: "Username:",
+    },
+    {
+      className: "password",
+      id: "password",
+      type: "password",
+      label: "Password:",
+    },
+  ];
+
+  const regInputFields = [
     {
       className: "firstName",
       id: "firstName",
@@ -90,8 +106,8 @@ function App() {
     <div className="App">
       <Header />
       <form onSubmit={handleSubmit}>
-        {inputFields.map((inputField, index) => (
-          <InputField
+        {regInputFields.map((inputField, index) => (
+          <RegistInputField
             key={index}
             className={inputField.className}
             type={inputField.type}
@@ -100,11 +116,28 @@ function App() {
             id={inputField.id}
           />
         ))}
+
         <button type="submit">Register</button>
+      </form>
+      <form>
+        {logInputFields.map((inputField, index) => (
+          <LoginField
+            key={index}
+            className={inputField.className}
+            type={inputField.type}
+            label={inputField.label}
+            handleChange={handleChange}
+            id={inputField.id}
+          />
+        ))}
+        <button type="button">Login</button>
       </form>
     </div>
   ) : (
-    <h1>Thank you for your registration!</h1>
+    <>
+      <h1>Thank you for your registration!</h1>
+      <button>Login</button>
+    </>
   );
 }
 

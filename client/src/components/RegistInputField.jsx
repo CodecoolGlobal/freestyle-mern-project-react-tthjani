@@ -1,4 +1,4 @@
-function InputField(props) {
+function RegistInputField(props) {
   const className = props.className;
   const type = props.type;
   const label = props.label;
@@ -13,4 +13,4 @@ function InputField(props) {
   );
 }
 
-export default InputField;
+export default RegistInputField;
