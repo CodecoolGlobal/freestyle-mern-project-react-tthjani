@@ -1,31 +1,15 @@
 import "./App.css";
 import Header from "./components/Header";
 import RegistInputField from "./components/RegistInputField";
-import LoginField from "./components/Login";
+import LoginField from "./components/LoginField";
 import { useState } from "react";
+import RegistForm from "./components/RegistForm";
+import LoginForm from "./components/LoginForm";
 
 
 function App() {
   const [submitted, setSubmitted] = useState(false);
 
-  let usersData = {
-    firstName: "",
-    lastName: "",
-    username: "",
-    email: "",
-    phone: "",
-    password: "",
-  };
-
-  let userAccData = {
-    username: "",
-    password: "",
-  };
-
-  const [regForm, setRegForm] = useState(usersData);
-  const [accForm, setAccForm] = useState(userAccData);
-
-  //console.log(form);
 
   const logInputFields = [
     {
@@ -130,110 +114,30 @@ function App() {
     
   ;
 
-  const loginSubmit = (event) => {
-    event.preventDefault();
-
-    const newAccForm = {
-      username: accForm.username,
-      password: accForm.password,
-    };
-
-   
-    fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(newAccForm)
-      })
-      .then(response => response.json())
-      .then(response => {;         
-        console.log(response.success);       // ehhez kell majd egy useState amit belehet rakni ternarybe, hogy tovább engedjen vagy hibaüzenet
-      
-        console.log("Login complete!");
-      })
-      .catch(error => console.log(error));
-
-    setSubmitted(true);
-    console.log(newAccForm);
-    console.log("Login complete!");
-  };
-
-  
     
-
-
-
-  const handleRegChange = function (event) {
-    const id = event.target.id;
-    const value = event.target.value;
-
-    setRegForm((prevForm) => {
-      return {
-        ...prevForm,
-        [id]: value,
-      };
-    });
-  }
-  const handleAccChange = function (event) {
-    const id = event.target.id;
-    const value = event.target.value;
-
-    setAccForm((prevForm) => {
-      return {
-        ...prevForm,
-        [id]: value,
-      };
-    });
-  };
-
-
 
   return !submitted ? (
     <div className="App">
       <Header />
-      <form onSubmit={handleSubmit} className="regCard">
-        {regInputFields.map((inputField, index) => (
-          <RegistInputField
-            key={index}
-            className={inputField.className}
-            type={inputField.type}
-            label={inputField.label}
-            handleChange={handleRegChange}
-            id={inputField.id}
-          />
-        ))}
-
-        <button type="submit" /* onClick={handleRegistration} */>Register</button>
-      </form>
-      <form onSubmit={loginSubmit} className="logCard">
-        {logInputFields.map((inputField, index) => (
-          <LoginField
-            key={index}
-            className={inputField.className}
-            type={inputField.type}
-            label={inputField.label}
-            handleChange={handleAccChange}
-            id={inputField.id}
-          />
-        ))}
-        <button type="submit">Login</button>
-      </form>
+      <RegistForm
+        handleSubmit={handleSubmit}
+        regInputFields={regInputFields}
+        setSubmitted={setSubmitted}
+      />
+      <LoginForm
+        /* loginSubmit={loginSubmit} */
+        logInputFields={logInputFields}
+        setSubmitted={setSubmitted}
+      />
     </div>
   ) : (
     <>
       <h1>Successful registration, please log in!</h1>
-      <form onSubmit={loginSubmit}>
-        {logInputFields.map((inputField, index) => (
-          <LoginField
-            key={index}
-            className={inputField.className}
-            type={inputField.type}
-            label={inputField.label}
-            handleChange={handleAccChange}
-            id={inputField.id}
-          />
-        ))}
-        <button type="submit">Login</button>
-      </form>
+      <LoginForm
+        /* loginSubmit={loginSubmit} */
+        logInputFields={logInputFields}
+        setSubmitted={setSubmitted}
+      />
     </>
   );
 }
