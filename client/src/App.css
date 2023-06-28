@@ -43,6 +43,20 @@
 
 .logCard {
   position: relative;
-  left: -430px;
+  left: -300px;
   top: -150px;
+  background-color: black;
+}
+
+.regCard {
+  position: relative;
+  left: 300px;
+  background-color: black;
+}
+
+.logo {
+  position: relative;
+  scale: 180%;
+  left: -600px;
+  top: -50px;
 }
