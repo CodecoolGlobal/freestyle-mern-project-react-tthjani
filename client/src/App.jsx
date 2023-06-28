@@ -1,4 +1,5 @@
 import "./App.css";
+import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 import Header from "./components/Header";
 import RegistInputField from "./components/RegistInputField";
 import LoginField from "./components/LoginField";
@@ -8,7 +9,7 @@ import LoginForm from "./components/LoginForm";
 import Logo from "./components/Logo";
 import Profilenavbar from "./components/Profilenavbar";
 import OptionsNavbar from "./components/OptionsNavbar";
-
+import Booking from "./components/Booking";
 
 function App() {
   const [submitted, setSubmitted] = useState(false);
@@ -120,23 +121,31 @@ function App() {
     
 
   return (
+    <Router>
     <div>
-    <Logo />
+    <Logo />    
     {!passwordCorrect ?
   (!submitted ? (
     <div className="App">
       <Header />
-      <RegistForm
+      <Routes>
+      <Route path="/main" element={
+        <>
+         <RegistForm
         handleSubmit={handleSubmit}
         regInputFields={regInputFields}
         setSubmitted={setSubmitted}
-      />
-      <LoginForm
+        />
+         <LoginForm
         logInputFields={logInputFields}
-        setSubmitted={setSubmitted}
-        setPasswordCorrect={setPasswordCorrect}
-      />
-    </div>
+        setPasswordCorrect={setPasswordCorrect} 
+        />
+        </>
+      } />
+     
+      
+        </Routes>
+      </div>
   ) : (
     <>
       <h1>Successful registration, please log in!</h1>
@@ -154,7 +163,13 @@ function App() {
     <h2>vmi</h2> //searcbaros componens ide jön
     </>  
   )}
+ 
+   <Routes>
+    <Route path="/booking" element={<Booking/>}/>
+   </Routes>
    </div>
+
+   </Router>
   )
 }
 

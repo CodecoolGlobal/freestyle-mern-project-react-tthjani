@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoginField from "./LoginField";
 
-function LoginForm({ /* loginSubmit, */ logInputFields, setSubmitted, setPasswordCorrect }) {
+function LoginForm({ /* loginSubmit, */ logInputFields,  setPasswordCorrect }) {
    const [accForm, setAccForm] = useState({
         username: "",
         password: ""
