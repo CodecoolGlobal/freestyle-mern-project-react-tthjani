@@ -5,11 +5,14 @@ import LoginField from "./components/LoginField";
 import { useState } from "react";
 import RegistForm from "./components/RegistForm";
 import LoginForm from "./components/LoginForm";
+import Logo from "./components/Logo";
+import Profilenavbar from "./components/Profilenavbar";
+import OptionsNavbar from "./components/OptionsNavbar";
 
 
 function App() {
   const [submitted, setSubmitted] = useState(false);
-
+  const [passwordCorrect, setPasswordCorrect] = useState(false);
 
   const logInputFields = [
     {
@@ -110,13 +113,17 @@ function App() {
     } else {
       console.log("Not working");
     }
+
   };
     
-  ;
-
+  
     
 
-  return !submitted ? (
+  return (
+    <div>
+    <Logo />
+    {!passwordCorrect ?
+  (!submitted ? (
     <div className="App">
       <Header />
       <RegistForm
@@ -125,21 +132,30 @@ function App() {
         setSubmitted={setSubmitted}
       />
       <LoginForm
-        /* loginSubmit={loginSubmit} */
         logInputFields={logInputFields}
         setSubmitted={setSubmitted}
+        setPasswordCorrect={setPasswordCorrect}
       />
     </div>
   ) : (
     <>
       <h1>Successful registration, please log in!</h1>
       <LoginForm
-        /* loginSubmit={loginSubmit} */
         logInputFields={logInputFields}
         setSubmitted={setSubmitted}
+        setPasswordCorrect={setPasswordCorrect}
       />
     </>
-  );
+  )
+  ):(
+    <>
+    <Profilenavbar/>
+    <OptionsNavbar/>
+    <h2>vmi</h2> //searcbaros componens ide jön
+    </>  
+  )}
+   </div>
+  )
 }
 
 export default App;

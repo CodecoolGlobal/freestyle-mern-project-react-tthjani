@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoginField from "./LoginField";
 
-function LoginForm({ /* loginSubmit, */ logInputFields, setSubmitted}) {
+function LoginForm({ /* loginSubmit, */ logInputFields, setSubmitted, setPasswordCorrect }) {
    const [accForm, setAccForm] = useState({
         username: "",
         password: ""
@@ -61,7 +61,7 @@ function LoginForm({ /* loginSubmit, */ logInputFields, setSubmitted}) {
           .then(response => response.json())
           .then(response => {;         
             console.log(response.success);       // ehhez kell majd egy useState amit be lehet rakni ternarybe, hogy tovább engedjen vagy hibaüzenet
-          
+            setPasswordCorrect(response.success)
             console.log("Login complete!");
           })
           .catch(error => console.log(error));
