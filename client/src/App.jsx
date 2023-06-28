@@ -8,7 +8,7 @@ import LoginForm from "./components/LoginForm";
 import Logo from "./components/Logo";
 import Profilenavbar from "./components/Profilenavbar";
 import OptionsNavbar from "./components/OptionsNavbar";
-
+import Searchbar from "./components/Searchbar";
 
 function App() {
   const [submitted, setSubmitted] = useState(false);
@@ -89,73 +89,68 @@ function App() {
         phone: regForm.phone,
         password: regForm.password,
       };
-      
+
       console.log(newRegForm);
       setSubmitted(true);
 
-       const data = { 
+      const data = {
         officialName: newRegForm.name,
-        username:newRegForm.username,
+        username: newRegForm.username,
         email: newRegForm.email,
         phone: newRegForm.phone,
-        password: newRegForm.password,};
-      
-        fetch('http://localhost:3000/api/registration', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-        })
-          .then(response => response.json())
-          .then(response => setRegForm(response))
-          .catch(error => console.log(error)) 
+        password: newRegForm.password,
+      };
 
-        console.log("Registration complete!")
+      fetch("http://localhost:3000/api/registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((response) => setRegForm(response))
+        .catch((error) => console.log(error));
+
+      console.log("Registration complete!");
     } else {
       console.log("Not working");
     }
-
   };
-    
-  
-    
 
   return (
     <div>
-    <Logo />
-    {!passwordCorrect ?
-  (!submitted ? (
-    <div className="App">
-      <Header />
-      <RegistForm
-        handleSubmit={handleSubmit}
-        regInputFields={regInputFields}
-        setSubmitted={setSubmitted}
-      />
-      <LoginForm
-        logInputFields={logInputFields}
-        setSubmitted={setSubmitted}
-        setPasswordCorrect={setPasswordCorrect}
-      />
+      <Logo />
+      {!passwordCorrect ? (
+        !submitted ? (
+          <div className="App">
+            <Header />
+            <RegistForm
+              handleSubmit={handleSubmit}
+              regInputFields={regInputFields}
+              setSubmitted={setSubmitted}
+            />
+            <LoginForm
+              logInputFields={logInputFields}
+              setPasswordCorrect={setPasswordCorrect}
+            />
+          </div>
+        ) : (
+          <>
+            <h1>Successful registration, please log in!</h1>
+            <LoginForm
+              logInputFields={logInputFields}
+              setPasswordCorrect={setPasswordCorrect}
+            />
+          </>
+        )
+      ) : (
+        <>
+          <Profilenavbar />
+          <OptionsNavbar />
+          <Searchbar />
+        </>
+      )}
     </div>
-  ) : (
-    <>
-      <h1>Successful registration, please log in!</h1>
-      <LoginForm
-        logInputFields={logInputFields}
-        setSubmitted={setSubmitted}
-        setPasswordCorrect={setPasswordCorrect}
-      />
-    </>
-  )
-  ):(
-    <>
-    <Profilenavbar/>
-    <OptionsNavbar/>
-    <h2>vmi</h2> //searcbaros componens ide jön
-    </>  
-  )}
-   </div>
-  )
+  );
 }
 
 export default App;
