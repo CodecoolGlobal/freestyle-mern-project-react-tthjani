@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import express from 'express'
 import User from './model/User.js'
 import bcrypt from 'bcrypt'
+import fetch from 'node-fetch'
+import City from './model/City.js'
 
 mongoose.connect("mongodb+srv://tothje98:testpassword@cluster0.yvwpywb.mongodb.net/mongonosz")
 
@@ -14,6 +16,115 @@ app.use((req, res, next) => {
     next();
   });
   app.use(express.json())
+  
+  const dataCity=[]  
+  const cities = ['Tokyo', 'Cairo', 'Budapest', 'Paris', 'London', 'New York', 'Washington', 'Rome', 'Milan', 'Melbourne', "Hong Kong", 'Seoul', 'Dubai', 'Moscow', 'Chicago', 'Berlin', 'Manila', 'Buenos Aires', 'Zurich', 'Toronto','Calgary']
+  app.get('/search', async (req, res) => {
+
+    try{
+      const result = cities.map(city=> fetchData(city));
+      const results = await Promise.all(result)
+      await saveDatatoMongo(results)
+      /* console.log(result) */
+      res.json({message: 'saved datas'})
+      
+    }catch(error){
+      console.error(error)
+      res.status(500).send('error')
+    }
+  })
+
+  async function fetchData(location){
+/*     console.log(location)
+ */  const url = `https://tripadvisor16.p.rapidapi.com/api/v1/rentals/searchLocation?query=${location}`;
+  const options = {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key":
+        "1d732d4fc8msh8dd14cfacd9d449p1608b6jsn8ce0fc05ce87",
+      "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
+    },
+  };
+
+   try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        const data = result.data;
+/*         console.log(data)
+ */        return data;
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+ async function saveDatatoMongo(dataArray) {
+  console.log(dataArray)
+  const cityPromises = dataArray.flatMap(cityData => {
+    console.log("ez itt a cityData:" + cityData)
+    return cityData.map(city => {
+      const {
+        geoId,
+        locationId,
+        localizedName,
+        localizedAdditionalNames,
+        locationV2,
+        placeType,
+        latitude,
+        longitude,
+        picture,
+      } = city;
+
+      const newCity = new City({
+        geoId,
+        locationId,
+        localizedName,
+        localizedAdditionalNames,
+        locationV2,
+        placeType,
+        latitude,
+        longitude,
+        picture,
+      });
+
+      return newCity.save();
+    });
+  });
+
+
+  try {
+    const savedCities = await Promise.all(cityPromises);
+    console.log(savedCities);
+  } catch (error) {
+    console.error('Error saving cities:', error);
+    throw error;
+  }
+}
+
+
+   
+ /*     app.post('/search', (req, res) => {
+     const city = new City({
+       geoId,
+       locationId,
+       localizedName,
+       localizedAdditionalNames,
+       locationV2,
+       placeType,
+       latitude,
+       longitude,
+       picture,
+     });
+
+
+        console.log(city)
+        city.save()
+          .then(savedCity => res.json(savedCity))
+          .catch(err => {
+            console.error('Error saving city:', err);
+            res.status(400).json({ success: false });
+          });
+      }); */
+   
 
   bcrypt.genSalt(10, (err, salt) => { //itt kell lennie, mert különben ha mindakét postban benne van különböző saltot kreál
     if (err) {
