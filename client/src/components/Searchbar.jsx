@@ -1,40 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function Searchbar() {
-  useEffect(() => {
-    const getData = async () => {
-      let cityNames = [];
+  const [inputValue, setInputValue] = useState();
+  const [cities, setCities] = useState([]);
 
-      const url = `https://tripadvisor16.p.rapidapi.com/api/v1/rentals/searchLocation?query=${location}`;
-      const options = {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key":
-            "aa3656e138msh4e5197e92916ffap1ed974jsn6431154bed3d",
-          "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
-        },
-      };
-
-      try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        const data = result.data;
-
-        data.forEach((city) => {
-          console.log(city.localizedName);
-          cityNames.push(city.localizedName);
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getData();
-  });
-  const [location, setLocation] = useState();
-
-  const handleChange = function (event) {
+  const submitValue = (event) => {
+    event.preventDefault();
     const value = event.target.value;
-    setLocation(value);
+    setInputValue(value);
+    console.log(inputValue);
+    fetch("http://localhost:3000/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ localizedName: inputValue }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setCities(response);
+        console.log(response);
+        console.log("Fetch dofcasfasdasd!");
+      })
+      .catch((error) => console.log(error));
+
+    console.log("Fetch done!");
   };
 
   return (
@@ -43,8 +31,15 @@ function Searchbar() {
         id="search"
         type="search"
         placeholder="Search a location"
-        onChange={handleChange}
+        onChange={submitValue}
       ></input>
+      <ul className="dropdown-menu options">
+        {cities.map((city) => (
+          <li key={city.id}>
+            {city.localizedName} - {city.locationV2}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

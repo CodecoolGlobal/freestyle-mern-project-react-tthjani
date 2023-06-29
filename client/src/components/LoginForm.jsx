@@ -56,7 +56,7 @@ function LoginForm({ /* loginSubmit, */ logInputFields, setPasswordCorrect }) {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response.success); // ehhez kell majd egy useState amit be lehet rakni ternarybe, hogy tovább engedjen vagy hibaüzenet
+        console.log(response.success);
         setPasswordCorrect(response.success);
         console.log("Login complete!");
       })

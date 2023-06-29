@@ -1,5 +1,5 @@
 import "./App.css";
-import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import RegistInputField from "./components/RegistInputField";
 import LoginField from "./components/LoginField";
@@ -119,56 +119,40 @@ function App() {
   };
 
   return (
-    <Router>
     <div>
-    <Logo />    
-    {!passwordCorrect ?
-  (!submitted ? (
-    <div className="App">
-      <Header />
-      <Routes>
-      <Route path="/main" element={
+      <Logo />
+      {!passwordCorrect ? (
+        !submitted ? (
+          <div className="App">
+            <Header />
+            <RegistForm
+              handleSubmit={handleSubmit}
+              regInputFields={regInputFields}
+              setSubmitted={setSubmitted}
+            />
+            <LoginForm
+              logInputFields={logInputFields}
+              setPasswordCorrect={setPasswordCorrect}
+            />
+          </div>
+        ) : (
+          <>
+            <h1>Successful registration, please log in!</h1>
+            <LoginForm
+              logInputFields={logInputFields}
+              setPasswordCorrect={setPasswordCorrect}
+            />
+          </>
+        )
+      ) : (
         <>
-         <RegistForm
-        handleSubmit={handleSubmit}
-        regInputFields={regInputFields}
-        setSubmitted={setSubmitted}
-        />
-         <LoginForm
-        logInputFields={logInputFields}
-        setPasswordCorrect={setPasswordCorrect} 
-        />
+          <Profilenavbar />
+          <OptionsNavbar />
+          <Searchbar />
         </>
-      } />
-     
-      
-        </Routes>
-      </div>
-  ) : (
-    <>
-      <h1>Successful registration, please log in!</h1>
-      <LoginForm
-        logInputFields={logInputFields}
-        
-        setPasswordCorrect={setPasswordCorrect}
-      />
-    </>
-  )
-  ):(
-    <>
-    <Profilenavbar/>
-    <OptionsNavbar/>
-    <Searchbar />
-    </>  
-  )}
- 
-   <Routes>
-    <Route path="/booking" element={<Booking/>}/>
-   </Routes>
-   </div>
-
-   </Router>
-  )
+      )}
+    </div>
+  );
 }
 
 export default App;
