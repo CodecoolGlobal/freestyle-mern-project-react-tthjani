@@ -1,46 +1,72 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import HotelSelector from "./HotelSelector";
+
 
 
 function Booking() {
-const [newresult, setNewResult] =useState('')
+    const [newresult, setNewResult] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [searchClicked, setSearchClicked] = useState(false);
+    const handleStartChange = (e) => {
+      setStartDate(e.target.value);
+    };
+    
+    const handleEndChange = (e) => {
+      setEndDate(e.target.value);
+    };
+    
 
-useEffect(() => {
- 
-const fetchData = async() =>{
+    const handleSearch = async () => {
+        setSearchClicked(true);
+        console.log(startDate, endDate);
+      
+        const url = `https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchHotelsByLocation?latitude=40.730610&longitude=-73.935242&checkIn=${startDate}&checkOut=${endDate}&pageNumber=1&currencyCode=USD`;
+        const options = {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": "aa3656e138msh4e5197e92916ffap1ed974jsn6431154bed3d",
+            "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
+          },
+        };
+      
+        try {
+          const response = await fetch(url, options);
+          const result = await response.json();
+          if (result && result. data && result.data.data) {
+            setNewResult(result);
+            
+          } else {
+            console.error("Invalid response data");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      
 
-const url = 'https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchHotelsByLocation?latitude=40.730610&longitude=-73.935242&checkIn=2023-06-29&checkOut=2023-06-29&pageNumber=1&currencyCode=USD';
-const options = {
-  method: 'GET',
-  headers: {
-    'X-RapidAPI-Key': '75ae5e6804msh9084257fa081838p127c40jsn71c8d4a1f3c3',
-    'X-RapidAPI-Host': 'tripadvisor16.p.rapidapi.com'
-  }
-};
 
-try {
-	const response = await fetch(url, options);
-	const result = await response.json();
-    setNewResult(JSON.stringify(result))
-    console.log(typeof result)
-} catch (error) {
-	console.error(error);
+
+  const searchForm = (
+  <div>
+    <input
+      className="accomodationStartDate"
+      type="date"
+      onChange={handleStartChange}
+    />
+    <input
+      className="accomodationEndDate"
+      type="date"
+      onChange={handleEndChange}
+    />
+    <input />
+    <button onClick={handleSearch}>SEARCH</button>
+  </div>
+);
+
+
+
+return <div>{!searchClicked ?  <HotelSelector searchForm={searchForm}  newresult={newresult}/> : <HotelSelector searchForm={searchForm}  newresult={newresult} />}</div>;
 }
-}
-fetchData(); 
-}, [])
 
-
-    return (
-        <div>
-        <button>HOTELS</button>
-        <button>RESTAURANTS</button>
-        <button>ATTRACTIONS</button>
-
-        <h2>{newresult}</h2>
-        </div>
-    )
-    ;
-  }
-  
-  export default Booking;
-  
+export default Booking;
