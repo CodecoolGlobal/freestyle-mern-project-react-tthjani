@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
-const cities = [
+/* const cities = [
   "Tokyo",
   "Cairo",
   "Budapest",
@@ -75,7 +75,7 @@ async function fetchData(location) {
   } catch (error) {
     console.error(error);
   }
-}
+} */
 
 
 
@@ -185,49 +185,32 @@ bcrypt.genSalt(10, (err, salt) => {
     const { username, password } = req.body;
     
 
-    bcrypt.hash(password, salt, (err, hashedPassword) => {
-      if (err) {
-        console.error("Error during password hashing:", err);
-        res.status(500).json({ success: false });
+     User.findOne({ username: username })
+    .then((user) => {
+      if (!user) {
+        res.json({ success: false, message: "User not found" });
         return;
       }
 
-      const loginUser = {
-        loginUsername: username,
-        loginHashedPassword: hashedPassword,
-      };
-      console.log(loginUser.loginHashedPassword);
-    
-      User.find({ username: loginUser.loginUsername })
-        .then((users) => {
-          if (users.length > 0) {
-            console.log(users[0].hashedPassword);
-            console.log(loginUser.loginHashedPassword);
-            let isMatch = false;
-            users.forEach((user) => {
-              console.log(user.hashedPassword);
-              console.log(loginUser.loginHashedPassword);
-              console.log(user.hashedPassword);
-              if (user.hashedPassword === loginUser.loginHashedPassword) {
-                console.log("EGYEZIK");
-                isMatch = true;
-              }
-            });
-            if (isMatch) {
-              res.json({ success: true, message: "MATCH" });
-            } else {
-              res.json({ success: false, message: "NO MATCH" });
-            }
-          } else {
-            console.log("not found");
-            res.json({ success: false, message: "User not found" });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
+      bcrypt.compare(password, user.hashedPassword, (err, isMatch) => {
+        if (err) {
+          console.error("Error during password comparison:", err);
           res.status(500).json({ success: false });
-        });
+          return;
+        }
+
+        if (isMatch) {
+          res.json({ success: true, message: "MATCH" });
+        } else {
+          res.json({ success: false, message: "NO MATCH" });
+        }
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ success: false });
     });
+        
   });
 });
 

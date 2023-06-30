@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HotelSelector from "./HotelSelector";
 
-function Booking({ selectedCountry }) {
+function Booking({ selectedCountry,  }) {
   const [hotels, setHotels] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -56,14 +56,16 @@ function Booking({ selectedCountry }) {
   );
 
   return (
-    <div>
+  <div className="booking-container">
+    <div className="booking-content" >
       {!searchClicked ? (
         <HotelSelector searchForm={searchForm} hotels={hotels} />
       ) : (
         <HotelSelector searchForm={searchForm} hotels={hotels} />
       )}
     </div>
-  );
+  </div>
+);
 }
 
 export default Booking;

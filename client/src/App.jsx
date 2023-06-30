@@ -119,21 +119,24 @@ function App() {
   };
 
   return (
-    <div>
+
+    <div className="app-container">
       <Logo />
       {!passwordCorrect ? (
         !submitted ? (
           <div className="App">
             <Header />
-            <RegistForm
-              handleSubmit={handleSubmit}
-              regInputFields={regInputFields}
-              setSubmitted={setSubmitted}
-            />
-            <LoginForm
-              logInputFields={logInputFields}
-              setPasswordCorrect={setPasswordCorrect}
-            />
+            <div className="form-container">
+              <RegistForm
+                handleSubmit={handleSubmit}
+                regInputFields={regInputFields}
+                setSubmitted={setSubmitted}
+              />
+              <LoginForm
+                logInputFields={logInputFields}
+                setPasswordCorrect={setPasswordCorrect}
+              />
+            </div>
           </div>
         ) : (
           <>
@@ -145,11 +148,11 @@ function App() {
           </>
         )
       ) : (
-        <>
+        <div className="navbars-container">
           <Profilenavbar />
           <OptionsNavbar />
           <Searchbar />
-        </>
+        </div>
       )}
     </div>
   );

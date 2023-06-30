@@ -14,6 +14,7 @@ console.log(hotels)
           />
           <h2>{hotel.title}</h2>
           <h2>{hotel.secondaryInfo}</h2>
+          
         </div>
       ))}
     </div>

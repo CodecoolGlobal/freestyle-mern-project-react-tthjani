@@ -6,7 +6,7 @@ function Searchbar() {
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [listVisible, setListVisible] = useState(true);
-
+const [bookingActive, setBookingActive] = useState(false);
   const submitValue = (event) => {
     const value = event.target.value;
     setInputValue(value);
@@ -27,30 +27,36 @@ function Searchbar() {
   }, [selectedCity]);
 
   const handleCityClick = (city) => {
-    setSelectedCity(city);
-    setListVisible(false);
-  };
+  setSelectedCity(city);
+  setListVisible(false);
+  setBookingActive(true);
+};
 
-  return (
-    <div>
-      <input
-        id="search"
-        type="search"
-        placeholder="Search a location"
-        onChange={submitValue}
-      />
-      {listVisible && (
-        <ul className="dropdown-menu options">
-          {cities.map((city) => (
-            <li key={city.id} onClick={() => handleCityClick(city)}>
-              {city.localizedName} - {city.locationV2}
-            </li>
-          ))}
-        </ul>
-      )}
-      {selectedCity && <Booking selectedCountry={selectedCity} />}
-    </div>
-  );
-}
+return (
+ <div className="searchbar-container">
+    <input
+      id="search"
+      type="search"
+      placeholder="Search a location"
+      onChange={submitValue}
+      disabled={bookingActive}
+      className="search-input"
+    />
+    {listVisible && !bookingActive && (
+      <ul className="dropdown-menu options">
+        {cities.map((city) => (
+          <li key={city.id} onClick={() => handleCityClick(city)}>
+            {city.localizedName} - {city.locationV2}
+          </li>
+        ))}
+      </ul>
+    )}
+    {selectedCity && (
+      <Booking selectedCountry={selectedCity} bookingActive={bookingActive} />
+    )}
+  </div>
+
+);
+    }
 
 export default Searchbar;
