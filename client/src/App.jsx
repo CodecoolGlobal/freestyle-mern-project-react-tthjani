@@ -119,7 +119,6 @@ function App() {
   };
 
   return (
-
     <div className="app-container">
       <Logo />
       {!passwordCorrect ? (
@@ -140,7 +139,6 @@ function App() {
           </div>
         ) : (
           <>
-            <h1>Successful registration, please log in!</h1>
             <LoginForm
               logInputFields={logInputFields}
               setPasswordCorrect={setPasswordCorrect}
