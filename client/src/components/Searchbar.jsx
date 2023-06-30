@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Booking from "./Booking";
 
 function Searchbar() {
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState("");
   const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [listVisible, setListVisible] = useState(true);
 
   const submitValue = (event) => {
-    event.preventDefault();
     const value = event.target.value;
     setInputValue(value);
-    console.log(inputValue);
     fetch("http://localhost:3000/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ localizedName: inputValue }),
+      body: JSON.stringify({ localizedName: value }),
     })
       .then((response) => response.json())
       .then((response) => {
         setCities(response);
-        console.log(response);
-        console.log("Fetch dofcasfasdasd!");
       })
       .catch((error) => console.log(error));
+  };
 
-    console.log("Fetch done!");
+  useEffect(() => {
+    console.log(selectedCity);
+  }, [selectedCity]);
+
+  const handleCityClick = (city) => {
+    setSelectedCity(city);
+    setListVisible(false);
   };
 
   return (
@@ -32,14 +38,17 @@ function Searchbar() {
         type="search"
         placeholder="Search a location"
         onChange={submitValue}
-      ></input>
-      <ul className="dropdown-menu options">
-        {cities.map((city) => (
-          <li key={city.id}>
-            {city.localizedName} - {city.locationV2}
-          </li>
-        ))}
-      </ul>
+      />
+      {listVisible && (
+        <ul className="dropdown-menu options">
+          {cities.map((city) => (
+            <li key={city.id} onClick={() => handleCityClick(city)}>
+              {city.localizedName} - {city.locationV2}
+            </li>
+          ))}
+        </ul>
+      )}
+      {selectedCity && <Booking selectedCountry={selectedCity} />}
     </div>
   );
 }

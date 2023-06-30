@@ -1,72 +1,69 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import HotelSelector from "./HotelSelector";
 
+function Booking({ selectedCountry }) {
+  const [hotels, setHotels] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [searchClicked, setSearchClicked] = useState(false);
 
+  const handleStartChange = (e) => {
+    setStartDate(e.target.value);
+  };
 
-function Booking() {
-    const [newresult, setNewResult] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [searchClicked, setSearchClicked] = useState(false);
-    const handleStartChange = (e) => {
-      setStartDate(e.target.value);
-    };
-    
-    const handleEndChange = (e) => {
-      setEndDate(e.target.value);
-    };
-    
+  const handleEndChange = (e) => {
+    setEndDate(e.target.value);
+  };
 
-    const handleSearch = async () => {
-        setSearchClicked(true);
-        console.log(startDate, endDate);
-      
-        const url = `https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchHotelsByLocation?latitude=40.730610&longitude=-73.935242&checkIn=${startDate}&checkOut=${endDate}&pageNumber=1&currencyCode=USD`;
-        const options = {
-          method: "GET",
-          headers: {
-            "X-RapidAPI-Key": "aa3656e138msh4e5197e92916ffap1ed974jsn6431154bed3d",
-            "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
-          },
-        };
-      
-        try {
-          const response = await fetch(url, options);
-          const result = await response.json();
-          if (result && result. data && result.data.data) {
-            setNewResult(result);
-            
-          } else {
-            console.error("Invalid response data");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      
+  const handleSearch = async () => {
+    setSearchClicked(true);
+    console.log(selectedCountry);
 
+    try {
+      const response = await fetch("http://localhost:3000/api/hotels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selectedCountry }),
+      });
 
+      const result = await response.json();
+      if (response.ok) {
+        setHotels(result);
+        console.log(hotels)
+      } else {
+        console.error("Error fetching hotels:", result);
+      }
+    } catch (error) {
+      console.error("Error fetching hotels:", error);
+    }
+  };
 
   const searchForm = (
-  <div>
-    <input
-      className="accomodationStartDate"
-      type="date"
-      onChange={handleStartChange}
-    />
-    <input
-      className="accomodationEndDate"
-      type="date"
-      onChange={handleEndChange}
-    />
-    <input />
-    <button onClick={handleSearch}>SEARCH</button>
-  </div>
-);
+    <div>
+      <input
+        className="accomodationStartDate"
+        type="date"
+        onChange={handleStartChange}
+      />
+      <input
+        className="accomodationEndDate"
+        type="date"
+        onChange={handleEndChange}
+      />
+      <input />
+      <button onClick={handleSearch}>SEARCH</button>
+    </div>
+  );
 
-
-
-return <div>{!searchClicked ?  <HotelSelector searchForm={searchForm}  newresult={newresult}/> : <HotelSelector searchForm={searchForm}  newresult={newresult} />}</div>;
+  return (
+    <div>
+      {!searchClicked ? (
+        <HotelSelector searchForm={searchForm} hotels={hotels} />
+      ) : (
+        <HotelSelector searchForm={searchForm} hotels={hotels} />
+      )}
+    </div>
+  );
 }
 
 export default Booking;

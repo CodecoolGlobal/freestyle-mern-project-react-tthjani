@@ -4,12 +4,16 @@ import User from "./model/User.js";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 import City from "./model/City.js";
+import Hotel from "./model/Hotel.js"
+import cors from "cors";
 
 mongoose.connect(
   "mongodb+srv://tothje98:testpassword@cluster0.yvwpywb.mongodb.net/mongonosz"
 );
 
 const app = express();
+app.use(cors());
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -46,7 +50,6 @@ app.get("/search", async (req, res) => {
     const result = cities.map((city) => fetchData(city));
     const results = await Promise.all(result);
     await saveDatatoMongo(results);
-    /* console.log(result) */
     res.json({ message: "saved datas" });
   } catch (error) {
     console.error(error);
@@ -55,12 +58,11 @@ app.get("/search", async (req, res) => {
 });
 
 async function fetchData(location) {
-  /*     console.log(location)
-   */ const url = `https://tripadvisor16.p.rapidapi.com/api/v1/rentals/searchLocation?query=${location}`;
+  const url = `https://tripadvisor16.p.rapidapi.com/api/v1/rentals/searchLocation?query=${location}`;
   const options = {
     method: "GET",
     headers: {
-      "X-RapidAPI-Key": "1d732d4fc8msh8dd14cfacd9d449p1608b6jsn8ce0fc05ce87",
+      "X-RapidAPI-Key": "0f762465demshdb053d800bf3383p1f9849jsn183b07248235",
       "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
     },
   };
@@ -69,20 +71,36 @@ async function fetchData(location) {
     const response = await fetch(url, options);
     const result = await response.json();
     const data = result.data;
-    /*         console.log(data)
-     */ return data;
+    return data;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function fetchDataHotels() {
-  /*     console.log(location)
-   */ const url = `https://tripadvisor16.p.rapidapi.com/api/v1/hotels/getHotelDetails`;
+
+
+/* app.get("/searchhotels", async (req, res) => {
+  try {
+    const cities = await City.find();
+  const geoIds = cities.map((city) => city.geoId);
+  
+    const result = cities.map((city) => fetchDataHotels(city));
+    const results = await Promise.all(result);
+    await saveHotelstoMongo(results);
+    res.json({results});
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("error");
+  }
+
+});
+async function fetchDataHotels(geoIds) {
+  const url = `https://tripadvisor16.p.rapidapi.com/api/v1/hotels/searchHotels?geoId=298184&checkIn=2023-07-03&checkOut=2023-07-07&pageNumber=1&currencyCode=USD`;
+              
   const options = {
     method: "GET",
     headers: {
-      "X-RapidAPI-Key": "1d732d4fc8msh8dd14cfacd9d449p1608b6jsn8ce0fc05ce87",
+      "X-RapidAPI-Key": "0f762465demshdb053d800bf3383p1f9849jsn183b07248235",
       "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
     },
   };
@@ -90,81 +108,44 @@ async function fetchDataHotels() {
   try {
     const response = await fetch(url, options);
     const result = await response.json();
-    const data = result.data;
-    /*         console.log(data)
-     */ return data;
+    const data = result.data.data;
+    return data;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function saveDatatoMongo(dataArray) {
-  console.log(dataArray);
-  const cityPromises = dataArray.flatMap((cityData) => {
-    console.log("ez itt a cityData:" + cityData);
-    return cityData.map((city) => {
-      const {
-        geoId,
-        locationId,
-        localizedName,
-        localizedAdditionalNames,
-        locationV2,
-        placeType,
-        latitude,
-        longitude,
-        picture,
-      } = city;
-
-      const newCity = new City({
-        geoId,
-        locationId,
-        localizedName,
-        localizedAdditionalNames,
-        locationV2,
-        placeType,
-        latitude,
-        longitude,
-        picture,
-      });
-
-      return newCity.save();
-    });
-  });
-
+async function saveHotelstoMongo(dataArray) {
   try {
-    const savedCities = await Promise.all(cityPromises);
-    console.log(savedCities);
-  } catch (error) {
-    console.error("Error saving cities:", error);
-    throw error;
-  }
-}
+    const hotelPromises = dataArray
+      .filter((hotelData) => hotelData) 
+      .flatMap((hotelData) =>
+        hotelData.map((hotel) => {
+          const { id, title, secondaryInfo, badge, bubbleRating, cardPhotos } =
+            hotel;
 
-/*     app.post('/search', (req, res) => {
-     const city = new City({
-       geoId,
-       locationId,
-       localizedName,
-       localizedAdditionalNames,
-       locationV2,
-       placeType,
-       latitude,
-       longitude,
-       picture,
-     });
-
-
-        console.log(city)
-        city.save()
-          .then(savedCity => res.json(savedCity))
-          .catch(err => {
-            console.error('Error saving city:', err);
-            res.status(400).json({ success: false });
+          const newHotel = new Hotel({
+            id,
+            title,
+            secondaryInfo,
+            badge,
+            bubbleRating,
+            cardPhotos,
           });
-      }); */
+
+          return newHotel.save();
+        })
+      );
+
+    await Promise.all(hotelPromises);
+  } catch (error) {
+    console.error(error);
+  }
+} */
+
+
 
 bcrypt.genSalt(10, (err, salt) => {
-  //itt kell lennie, mert különben ha mindakét postban benne van különböző saltot kreál
   if (err) {
     console.error("Error generating salt:", err);
     res.status(500).json({ success: false });
@@ -173,8 +154,7 @@ bcrypt.genSalt(10, (err, salt) => {
 
   app.post("/api/registration", (req, res) => {
     const { officialName, username, email, phone, password } = req.body;
-    //ide kell  a hashelt változat, bcrypt, ez tud validálni is, ugyanígy el kell hashelni a loginnál is és a két hasht kell összehasonlítani
-
+    
     bcrypt.hash(password, salt, (err, hashedPassword) => {
       if (err) {
         console.error("Error during password hashing:", err);
@@ -203,14 +183,7 @@ bcrypt.genSalt(10, (err, salt) => {
 
   app.post("/api/login", (req, res) => {
     const { username, password } = req.body;
-    //ide kell  a hashelt változat, bcrypt, ez tud validálni is, ugyanígy el kell hashelni a loginnál is és a két hasht kell összehasonlítani
-
-    /*    bcrypt.genSalt(10, (err, salt) => {
-      if (err) {
-        console.error('Error generating salt:', err);
-        res.status(500).json({ success: false });
-        return;
-      } */
+    
 
     bcrypt.hash(password, salt, (err, hashedPassword) => {
       if (err) {
@@ -224,8 +197,7 @@ bcrypt.genSalt(10, (err, salt) => {
         loginHashedPassword: hashedPassword,
       };
       console.log(loginUser.loginHashedPassword);
-      /* console.log(loginUser.loginUsername)
-      console.log(loginUser.loginHashedPassword) */
+    
       User.find({ username: loginUser.loginUsername })
         .then((users) => {
           if (users.length > 0) {
@@ -259,9 +231,14 @@ bcrypt.genSalt(10, (err, salt) => {
   });
 });
 
-app.get("/api/getsearch", async (req, res) => {
-  const cities = await City.find();
-  return res.json(cities);
+app.get('/api/getsearch', async (req, res) => {
+  try {
+    const cities = await City.find({}, 'localizedName localizedAdditionalNames');
+    res.json(cities);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
 });
 
 app.post("/api/search", (req, res) => {
@@ -271,6 +248,20 @@ app.post("/api/search", (req, res) => {
   City.find({ localizedName: new RegExp("^" + currentCity, "i") }) //TÁDÁM
     .then((cities) => res.json(cities))
     .catch((err) => res.status(500).json);
+});
+
+app.post("/api/hotels", async (req, res) => {
+  const selectedCountry = req.body;
+  console.log(selectedCountry.selectedCountry.localizedName)
+  try {
+    const hotels = await Hotel.find({localizedName: selectedCountry.selectedCountry.localizedName,
+    });
+
+    res.json(hotels);
+  } catch (error) {
+    console.error("Error fetching hotels:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

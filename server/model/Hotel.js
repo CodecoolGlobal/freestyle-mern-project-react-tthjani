@@ -4,10 +4,12 @@ import {Schema, model} from 'mongoose';
 
 
 const HotelSchema = new Schema({
-    
-    name: String
+title: String, 
+secondaryInfo:String, 
+rating: Number,
+photo:String,
 })
 
+const Hotel = model("hotel", HotelSchema);
 
-
-export default HotelSchema;
+export default Hotel;
