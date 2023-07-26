@@ -8,7 +8,9 @@ const userSchema = new Schema({
     username: String,
     email: String,
     phone: String,
-    hashedPassword: String ,     
+    hashedPassword: String , 
+    favourites: [Object],
+    cart: [Object]    
 })
 
 

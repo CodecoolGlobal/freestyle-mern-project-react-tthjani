@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoginField from "./LoginField";
 
-function LoginForm({ /* loginSubmit, */ logInputFields, setPasswordCorrect }) {
+function LoginForm({setUserId, userId, logInputFields, setPasswordCorrect }) {
   const [accForm, setAccForm] = useState({
     username: "",
     password: "",
@@ -57,7 +57,9 @@ function LoginForm({ /* loginSubmit, */ logInputFields, setPasswordCorrect }) {
       .then((response) => response.json())
       .then((response) => {
         console.log(response.success);
+        console.log(response.user)
         setPasswordCorrect(response.success);
+        setUserId(response.user)
         console.log("Login complete!");
       })
       .catch((error) => console.log(error));

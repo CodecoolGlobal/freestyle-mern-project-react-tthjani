@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Booking from "./Booking";
 
-function Searchbar() {
+function Searchbar({userId}) {
   const [inputValue, setInputValue] = useState("");
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -30,6 +30,7 @@ const [bookingActive, setBookingActive] = useState(false);
   setSelectedCity(city);
   setListVisible(false);
   setBookingActive(true);
+  console.log(userId)
 };
 
 return (

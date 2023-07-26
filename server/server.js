@@ -200,7 +200,8 @@ bcrypt.genSalt(10, (err, salt) => {
         }
 
         if (isMatch) {
-          res.json({ success: true, message: "MATCH" });
+          res.json({ success: true, message: "MATCH", user: {
+              _id: user._id} });
         } else {
           res.json({ success: false, message: "NO MATCH" });
         }
