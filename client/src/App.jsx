@@ -15,7 +15,7 @@ import RoomBooking from "./components/RoomBooking";
 function App() {
   const [submitted, setSubmitted] = useState(false);
   const [passwordCorrect, setPasswordCorrect] = useState(false);
-  const [userId, setUserId] = useState(null)
+  const [userId, setUserId] = useState(null);
   const logInputFields = [
     {
       className: "username",
@@ -118,69 +118,68 @@ function App() {
     }
   };
 
-return (
+  return (
     <Router>
-      <div className="app-container">
+      <div className="app-card">
         <Logo />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
-{          <Route path="/booking/:hotelid" element={<RoomBooking />} />
-}        </Routes>
+          {<Route path="/booking/:hotelid" element={<RoomBooking />} />}{" "}
+        </Routes>
       </div>
     </Router>
   );
 
   function Home() {
-  return (
-  <div className="app-container">
-    <Logo />
-    {!passwordCorrect ? (
-      !submitted ? (
-        <div className="App">
-          <Header />
-          <div className="form-container">
-            <RegistForm
-              handleSubmit={handleSubmit}
-              regInputFields={regInputFields}
-              setSubmitted={setSubmitted}
-            />
-            <LoginForm
-              logInputFields={logInputFields}
-              setPasswordCorrect={setPasswordCorrect}
-            />
-          </div>
-        </div>
-      ) : (
-        <>
-          <h1>Successful registration, please log in!</h1>
-          <LoginForm
-            logInputFields={logInputFields}
-            setPasswordCorrect={setPasswordCorrect}
-            setUserId={setUserId}
-            userId={userId}
-          />
-        </>
-      )
-    ) : (
-      <Search userId={userId} setUserId={setUserId}/>
-    )}
-  </div>
-);
-    }
-  
-   
-}
-function Search({userId, setUserId}) {
     return (
-      <>
+      <div style={{ background: "transparent" }} className="app-container">
+        {!passwordCorrect ? (
+          !submitted ? (
+            <div className="App">
+              <Header />
+              <div className="form-container">
+                <RegistForm
+                  handleSubmit={handleSubmit}
+                  regInputFields={regInputFields}
+                  setSubmitted={setSubmitted}
+                />
+                <LoginForm
+                  logInputFields={logInputFields}
+                  setPasswordCorrect={setPasswordCorrect}
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <h1>Successful registration, please log in!</h1>
+              <LoginForm
+                logInputFields={logInputFields}
+                setPasswordCorrect={setPasswordCorrect}
+                setUserId={setUserId}
+                userId={userId}
+              />
+            </>
+          )
+        ) : (
+          <Search userId={userId} setUserId={setUserId} />
+        )}
+      </div>
+    );
+  }
+}
+function Search({ userId, setUserId }) {
+  return (
+    <>
+      <div className="app-container">
         <div className="navbars-container">
           <Profilenavbar />
           <OptionsNavbar />
           <Searchbar userId={userId} setUserId={setUserId} />
         </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
+}
 export default App;
 export { Search };

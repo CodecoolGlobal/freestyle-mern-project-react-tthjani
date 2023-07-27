@@ -24,6 +24,7 @@ a:hover {
 }
 
 body {
+  background: url("../public/booking-background.jpg");
   margin: 0;
   display: flex;
   place-items: center;
@@ -48,7 +49,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #ffd700;
 }
 button:focus,
 button:focus-visible {
@@ -66,4 +67,75 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.app-container {
+  background-color: #8a6b06d4;
+  border-radius: 50px 0px 50px 0px;
+  scale: 115%;
+}
+.navbars-container {
+  background-color: #1a1a1a;
+  border-radius: 50px 0px 50px 0px;
+  backdrop-filter: blur(4px);
+}
+.booking-content {
+  background-color: #8a6b06d4;
+  border-radius: 50px;
+}
+
+#firstName {
+  margin: 5px;
+  text-align: center;
+}
+#lastName {
+  margin: 5px;
+  text-align: center;
+}
+#username {
+  position: relative;
+  left: 2px;
+  margin: 5px;
+  text-align: center;
+}
+#email {
+  position: relative;
+  left: 15px;
+  margin: 5px;
+  text-align: center;
+}
+#phone {
+  position: relative;
+  left: -15px;
+  margin: 5px;
+  text-align: center;
+}
+#password {
+  position: relative;
+  left: 4px;
+  margin: 5px;
+  text-align: center;
+}
+label {
+  position: relative;
+  left: -20px;
+}
+.regCard {
+  background-color: #1a1a1a5a;
+  border-radius: 50px 0px 50px 0px;
+  width: 90%;
+  backdrop-filter: blur(50px);
+}
+.logCard {
+  background-color: #8a6b067b;
+  margin-top: -80px;
+  padding-top: 60px;
+  padding-bottom: 60px;
+  border-radius: 0px 50px 0px 50px;
+  width: 90%;
+  backdrop-filter: blur(50px);
+}
+#search {
+  position: relative;
+  top: 15px;
 }
